@@ -15,7 +15,9 @@ class ViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
+    navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTaped))
  
   }
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -36,7 +38,13 @@ class ViewController: UITableViewController {
       self?.addNewItemToList(item)
     }
     ac.addAction(submitAction)
-    present(ac, animated: true)
+    present(ac, animated: true) {
+      let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissAlertController))
+      ac.view.superview?.subviews[0].addGestureRecognizer(tapGesture)
+    }
+  }
+  @objc func dismissAlertController(){
+    self.dismiss(animated: true, completion: nil)
 
   }
   func addNewItemToList(_ item:  String) {
@@ -44,6 +52,19 @@ class ViewController: UITableViewController {
     let indexPath = IndexPath(row: 0, section: 0)
     tableView.insertRows(at: [indexPath], with: .automatic)
 
+  }
+  
+  @objc func shareTaped() {
+    let list = shoppingList.joined(separator: "\n")
+//    guard let image = imageView.image?.jpegData(compressionQuality: 0.8)
+//      else {
+//        print("No image found")
+//        return
+//    }
+    let vc = UIActivityViewController(activityItems: [list], applicationActivities: [])
+    
+    vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+    present(vc, animated: true)
   }
 }
 
