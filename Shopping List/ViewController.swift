@@ -48,23 +48,21 @@ class ViewController: UITableViewController {
 
   }
   func addNewItemToList(_ item:  String) {
+    if !item.isEmpty{
     shoppingList.insert(item, at: 0)
     let indexPath = IndexPath(row: 0, section: 0)
     tableView.insertRows(at: [indexPath], with: .automatic)
+    }
 
   }
   
   @objc func shareTaped() {
     let list = shoppingList.joined(separator: "\n")
-//    guard let image = imageView.image?.jpegData(compressionQuality: 0.8)
-//      else {
-//        print("No image found")
-//        return
-//    }
     let vc = UIActivityViewController(activityItems: [list], applicationActivities: [])
     
     vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
     present(vc, animated: true)
   }
+  
 }
 
